@@ -4,7 +4,6 @@
 - Python 3.8+
 - Django 4.0+
 - Channels 3.0+
-- Redis (для production)
 
 ## Установка
 1. Клонировать репозиторий:
