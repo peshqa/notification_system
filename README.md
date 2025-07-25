@@ -9,7 +9,7 @@
 ## Установка
 1. Клонировать репозиторий:
    ```
-   git clone https://github.com/your-repo/notification_system.git
+   git clone https://github.com/peshqa/notification_system.git
    cd notification_system
    ```
 2. Установить зависимости:
