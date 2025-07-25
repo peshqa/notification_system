@@ -2,8 +2,8 @@
 
 ## Требования
 - Python 3.8+
-- Django 4.0+
-- Channels 3.0+
+- Django 4.2.7+
+- Channels 4.0+
 
 ## Установка
 1. Клонировать репозиторий:
@@ -27,10 +27,7 @@
    ```
    python manage.py runserver
    ```
-6. Запустить сервер:
-   ```
-   python manage.py runserver
-   ```
+
 ## Тестирование
 1. Войти в админ-панель (/admin) как:
 
