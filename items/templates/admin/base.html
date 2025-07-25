@@ -1,0 +1,87 @@
+{% extends "admin/base.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (!window.WebSocket) {
+        console.log("WebSocket not supported");
+        return;
+    }
+    
+    // Создаем элемент для уведомлений
+    const notificationContainer = document.createElement('div');
+    notificationContainer.id = 'notification-container';
+    notificationContainer.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        max-width: 400px;
+    `;
+    document.body.appendChild(notificationContainer);
+    
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socket = new WebSocket(protocol + '//' + window.location.host + '/ws/notifications/');
+    
+    socket.onopen = function() {
+        console.log('WebSocket connected');
+    };
+    
+    socket.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+    
+    socket.onmessage = function(e) {
+		try {
+            const data = JSON.parse(e.data);
+            if (data.type === 'notification') {
+                showNotification(data.message);
+            }
+        } catch (error) {
+            console.error('Error parsing notification:', error);
+        }
+    };
+    
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.cssText = `
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s;
+        `;
+        notification.textContent = message;
+        notificationContainer.appendChild(notification);
+        
+        // Автоматическое скрытие через 5 секунд
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.5s';
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 5000);
+    }
+    
+    // CSS анимации
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}
